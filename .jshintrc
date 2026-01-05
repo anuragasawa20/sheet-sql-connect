@@ -1,0 +1,11 @@
+{
+  "esversion": 6,
+  "module": true,
+  "node": true,
+  "browser": false,
+  "strict": false,
+  "undef": true,
+  "unused": true,
+  "asi": true
+}
+
