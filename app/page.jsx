@@ -134,6 +134,30 @@ export default function Home() {
                     sheetId={sheetId}
                     onCellUpdate={handleCellUpdate}
                 />
+
+                {/* Footer with Privacy Policy and Terms of Service links */}
+                <footer className="mt-12 pt-8 border-t border-gray-200">
+                    <div className="text-center space-y-2">
+                        <div className="flex justify-center items-center gap-4 flex-wrap">
+                            <a
+                                href="/privacy-policy"
+                                className="text-sm text-gray-600 hover:text-gray-900 underline"
+                            >
+                                Privacy Policy
+                            </a>
+                            <span className="text-gray-400">•</span>
+                            <a
+                                href="/terms-of-service"
+                                className="text-sm text-gray-600 hover:text-gray-900 underline"
+                            >
+                                Terms of Service
+                            </a>
+                        </div>
+                        <p className="text-xs text-gray-500 mt-4">
+                            © {new Date().getFullYear()} Google Sheet ↔ PostgreSQL Sync. All rights reserved.
+                        </p>
+                    </div>
+                </footer>
             </div>
         </main>
     )
