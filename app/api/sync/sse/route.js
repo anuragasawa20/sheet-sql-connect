@@ -19,26 +19,26 @@ import { addConnection, removeConnection } from '@/lib/sse-broadcaster'
 export async function GET(request) {
     const { searchParams } = new URL(request.url)
     const sheetId = searchParams.get('sheetId')
-    
+
     if (!sheetId) {
         return NextResponse.json(
             { error: 'sheetId query parameter is required' },
             { status: 400 }
         )
     }
-    
+
     // Create SSE response stream
     const encoder = new TextEncoder()
-    
+
     const stream = new ReadableStream({
         start(controller) {
             // Send initial connection confirmation
             const connectMessage = `data: ${JSON.stringify({ type: 'connected', sheetId, timestamp: new Date().toISOString() })}\n\n`
             controller.enqueue(encoder.encode(connectMessage))
-            
+
             // Store controller for broadcasting
             addConnection(sheetId, controller)
-            
+
             // Send heartbeat every 30 seconds to keep connection alive
             const heartbeatInterval = setInterval(() => {
                 try {
@@ -48,7 +48,7 @@ export async function GET(request) {
                     removeConnection(sheetId, controller)
                 }
             }, 30000) // 30 seconds
-            
+
             // Cleanup on close/disconnect
             request.signal.addEventListener('abort', () => {
                 clearInterval(heartbeatInterval)
@@ -56,7 +56,7 @@ export async function GET(request) {
             })
         }
     })
-    
+
     return new Response(stream, {
         headers: {
             'Content-Type': 'text/event-stream',

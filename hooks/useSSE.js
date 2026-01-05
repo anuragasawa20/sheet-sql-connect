@@ -15,21 +15,21 @@ import { useEffect, useRef } from 'react'
  */
 export function useSSE(sheetId, onSyncComplete) {
     const eventSourceRef = useRef(null)
-    
+
     useEffect(() => {
         if (!sheetId) {
             return
         }
-        
+
         // Create EventSource connection
         const eventSource = new EventSource(`/api/sync/sse?sheetId=${encodeURIComponent(sheetId)}`)
         eventSourceRef.current = eventSource
-        
+
         // Listen for messages
         eventSource.onmessage = (event) => {
             try {
                 const data = JSON.parse(event.data)
-                
+
                 if (data.type === 'sync-completed') {
                     console.log('📡 SSE: Sync completed event received', data)
                     if (onSyncComplete) {
@@ -42,18 +42,18 @@ export function useSSE(sheetId, onSyncComplete) {
                 console.error('Error parsing SSE message:', error)
             }
         }
-        
+
         // Handle connection errors
         eventSource.onerror = (error) => {
             console.error('SSE connection error:', error)
             // EventSource will automatically attempt to reconnect
         }
-        
+
         // Handle connection open
         eventSource.onopen = () => {
             console.log('📡 SSE: Connection opened for sheet', sheetId)
         }
-        
+
         // Cleanup on unmount
         return () => {
             if (eventSourceRef.current) {
@@ -63,7 +63,7 @@ export function useSSE(sheetId, onSyncComplete) {
             }
         }
     }, [sheetId, onSyncComplete])
-    
+
     return eventSourceRef.current
 }
 
